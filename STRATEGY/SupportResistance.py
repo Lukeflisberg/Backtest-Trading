@@ -249,7 +249,7 @@ class strategy(Strategy):
         
         # Plot the candelstick
         fig, ax1 = plt.subplots(figsize=(18, 10))
-        mpf.plot(data, type='line', ax=ax1, style='charles', show_nontrading=True)
+        mpf.plot(data, type='candle', ax=ax1, style='charles', show_nontrading=True)
 
         # Plot support points series
         if self.support_points_series:
