@@ -17,17 +17,17 @@ A program to backtest multiple dataframes with multiple strategies and recieve m
 ---
 
 ## 🔧 Dependencies
-> backtesting
-> matplotlib
-> mplfinance
-> numpy
-> sys
-> os
-> shutil
-> importlib.util
-> time
-> inspect
-> PyQt5
+    > backtesting
+    > matplotlib
+    > mplfinance
+    > numpy
+    > sys
+    > os
+    > shutil
+    > importlib.util
+    > time
+    > inspect
+    > PyQt5
 
 ---
 
