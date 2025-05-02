@@ -17,7 +17,19 @@ A program to backtest multiple dataframes with multiple strategies and recieve m
 ---
 
 ## 🔧 Dependencies
-pip install -...
+> backtesting
+> matplotlib
+> mplfinance
+> numpy
+> sys
+> os
+> shutil
+> importlib.util
+> time
+> inspect
+> PyQt5
+
+---
 
 ### 1️⃣ File Selection Window
 ![image](https://github.com/user-attachments/assets/6053824c-3e2b-4015-be4a-f4a8c3639ebd)
