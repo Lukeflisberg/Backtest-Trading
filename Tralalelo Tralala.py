@@ -14,6 +14,8 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt, QTimer
 
 IGNORE_FILES = ["__init__.py", "__pycache__"]
+COOKIES_FILE = "cookies.txt"
+
 DATA_DIR = "DATA"
 STRATEGY_DIR = "STRATEGY"
 
@@ -24,7 +26,6 @@ class FileSelectionWindow(QWidget):
     def __init__(self, next_callback):
         super().__init__()
         self.setWindowTitle("File Selection")
-        self.selected_files = set()
         self.delete_mode = False
         self.next_callback = next_callback
         self.toggle_state = False
@@ -37,8 +38,8 @@ class FileSelectionWindow(QWidget):
         # File list
         self.file_list = QListWidget()
         self.file_list.setSelectionMode(QListWidget.MultiSelection)
-        self.file_list.itemClicked.connect(self.toggle_item)
         self.load_files()
+        self.load_cookies()
         file_layout.addWidget(self.file_list)
 
         # Buttons
@@ -79,7 +80,7 @@ class FileSelectionWindow(QWidget):
             item = self.file_list.item(i)
             item.setCheckState(Qt.Checked if self.toggle_state else Qt.Unchecked)
 
-        self.toggle_state = not self.toggle_state  # Flip the toggle state
+        self.toggle_state = not self.toggle_state  
 
     def load_files(self):
         check_states = {self.file_list.item(i).text(): self.file_list.item(i).checkState()
@@ -100,13 +101,6 @@ class FileSelectionWindow(QWidget):
                 item.setCheckState(Qt.Checked)
 
             self.file_list.addItem(item)
-
-    def toggle_item(self, item):
-        if not self.delete_mode:
-            if item.checkState() == Qt.Checked:
-                self.selected_files.add(item.text())
-            else:
-                self.selected_files.discard(item.text())
 
     def add_file(self):
         file_paths, _ = QFileDialog.getOpenFileNames(self, "Select Files")
@@ -142,9 +136,30 @@ class FileSelectionWindow(QWidget):
         self.exit_delete_mode()
 
     def go_to_next(self):
-        toggled_files = [self.file_list.item(i).text() for i in range(self.file_list.count())
+        selected_files = [self.file_list.item(i).text() for i in range(self.file_list.count())
                          if self.file_list.item(i).checkState() == Qt.Checked]
-        self.next_callback(toggled_files)
+        self.save_cookies(selected_files)
+        self.next_callback(selected_files)
+
+    def save_cookies(self, selected_files):
+        with open (COOKIES_FILE, "w") as file:
+            for file_name in selected_files:
+                file.write(file_name + "\n")
+
+    def load_cookies(self):
+        if not os.path.exists(COOKIES_FILE):
+            return
+        
+        with open(COOKIES_FILE, "r") as file:
+            selected_files = [line.strip() for line in file.readlines()]
+
+        for i in range(self.file_list.count()):
+            item = self.file_list.item(i)
+
+            if item.text() in selected_files:
+                item.setCheckState(Qt.Checked)
+            else:
+                item.setCheckState(Qt.Unchecked)
 
 class StrategySelectionWindow(QWidget):
     def __init__(self, prev_callback, next_callback):
