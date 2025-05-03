@@ -13,6 +13,7 @@ from PyQt5.QtWidgets import (
 )
 from PyQt5.QtCore import Qt, QTimer
 
+IGNORE_FILES = ["__init__.py", "__pycache__"]
 DATA_DIR = "DATA"
 STRATEGY_DIR = "STRATEGY"
 
@@ -182,6 +183,9 @@ class StrategySelectionWindow(QWidget):
             os.makedirs(STRATEGY_DIR)
 
         for filename in os.listdir(STRATEGY_DIR):
+            if filename in IGNORE_FILES or not filename.endswith(".py"):
+                continue
+            
             item = QListWidgetItem(filename)
             item.setFlags(item.flags() | Qt.ItemIsUserCheckable)
             item.setCheckState(Qt.Checked)
@@ -297,13 +301,15 @@ class DebugProcessingWindow(QWidget):
 
                 if df.isnull().values.any():
                     self.log(f"Error: Data in {file_path} contains missing or invalid values!")
-                    return
+                    self.list_df.append(pd.DataFrame())  # Append an empty DataFrame
+                    continue
                 
                 self.list_df.append(df)
                 self.log(f"Processed {file} in {time.time() - time_start:.2f}s")
 
             except Exception as e:
-                self.log(f"Error processing {file}: {e}")
+                self.log(f"Error processing {file}: {e}{self.task_index+1}.")
+                self.task_index += 1
                 self.list_df.append(pd.DataFrame())  # Append an empty DataFrame
                 continue
 
