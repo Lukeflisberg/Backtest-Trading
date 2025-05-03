@@ -50,3 +50,4 @@ ToDo:
 3. Adjust UI
 4. Add hidden list for strategies
 5. Fix graphs having dumb numbers
+6. Add option to zoom in for graphs (toolbar)
