@@ -347,8 +347,8 @@ class DebugProcessingWindow(QWidget):
 
                     # Find the `strategy` class in the dynamically loaded module
                     strategy_class = None
-                    for name, obj in inspect.getmembers(module, inspect.isclass):
-                        if name == "strategy" and issubclass(obj, Strategy):
+                    for _, obj in inspect.getmembers(module, inspect.isclass):
+                        if issubclass(obj, Strategy):
                             strategy_class = obj
                             break
 
