@@ -405,78 +405,75 @@ class ResultsWindow(QWidget):
             strategy_layout.addWidget(dataframe_tabs)
 
             for i, file in enumerate(self.selected_files):
-                def create_dataframe_tab(file, strategy_index):
-                    dataframe_tab = QWidget()
-                    dataframe_layout = QVBoxLayout(dataframe_tab)
-
-                    graph_tabs = QTabWidget()
-
-                    # Candlestick tab
-                    candlestick_tab = QWidget()
-                    candlestick_layout = QVBoxLayout(candlestick_tab)
-
-                    # Equity Curve tab
-                    equity_curve_tab = QWidget()
-                    equity_curve_layout = QVBoxLayout(equity_curve_tab)
-
-                    # Stats tab
-                    stats_tab = QWidget()
-                    stats_layout = QVBoxLayout(stats_tab)
-
-                    graph_tabs.addTab(candlestick_tab, "Candlestick")
-                    graph_tabs.addTab(equity_curve_tab, "Equity Curve")
-                    graph_tabs.addTab(stats_tab, "Stats")
-
-                    # Initialize graph UI after setup
-                    def initialize_ui():
-                        try:
-                            candlestick_canvas = self.create_candlestick_graph(self.results[strategy_index][file])
-                            candlestick_layout.addWidget(candlestick_canvas)
-                        except Exception as e:
-                            print(f"Error creating candlestick graph: {e}")
-                            placeholder = QLabel("Candlestick graph could not be generated.")
-                            candlestick_layout.addWidget(placeholder)
-
-                        try:
-                            equity_curve_canvas = self.create_equity_curve_graph(self.results[strategy_index][file])
-                            equity_curve_layout.addWidget(equity_curve_canvas)
-                        except Exception as e:
-                            print(f"Error creating equity curve graph: {e}")
-                            placeholder = QLabel("Equity curve graph could not be generated.")
-                            equity_curve_layout.addWidget(placeholder)
-
-                        try:
-                            stats_box = QTextEdit(self.create_stats_text(self.results[strategy_index][file]))
-                            stats_box.setReadOnly(True)
-                            stats_layout.addWidget(stats_box)
-                        except Exception as e:
-                            print(f"Error creating results text: {e}")
-                            placeholder = QLabel("Results text could not be generated.")
-                            stats_layout.addWidget(placeholder)
-
-                    QTimer.singleShot(0, initialize_ui)
-
-                    dataframe_layout.addWidget(graph_tabs)
-                    dataframe_tab.setLayout(dataframe_layout)
-                    return dataframe_tab
-
-                tab = create_dataframe_tab(file, j)
+                tab = self.create_dataframe_tab(file, j)
                 dataframe_tabs.addTab(tab, file)
 
             strategy_tab.setLayout(strategy_layout)
             strategy_tabs.addTab(strategy_tab, strategy)
 
+    def create_dataframe_tab(self, file, strategy_index):
+        dataframe_tab = QWidget()
+        dataframe_layout = QVBoxLayout(dataframe_tab)
+
+        graph_tabs = QTabWidget()
+
+        # Candlestick tab
+        candlestick_tab = QWidget()
+        candlestick_layout = QVBoxLayout(candlestick_tab)
+
+        # Equity Curve tab
+        equity_curve_tab = QWidget()
+        equity_curve_layout = QVBoxLayout(equity_curve_tab)
+
+        # Stats tab
+        stats_tab = QWidget()
+        stats_layout = QVBoxLayout(stats_tab)
+
+        graph_tabs.addTab(candlestick_tab, "Candlestick")
+        graph_tabs.addTab(equity_curve_tab, "Equity Curve")
+        graph_tabs.addTab(stats_tab, "Stats")
+
+        # Initialize graph UI immediately
+        try:
+            candlestick_canvas = self.create_candlestick_graph(self.results[strategy_index][file])
+            candlestick_layout.addWidget(candlestick_canvas)
+        except Exception as e:
+            print(f"Error creating candlestick graph: {e}")
+            placeholder = QLabel("Candlestick graph could not be generated.")
+            candlestick_layout.addWidget(placeholder)
+
+        try:
+            equity_curve_canvas = self.create_equity_curve_graph(self.results[strategy_index][file])
+            equity_curve_layout.addWidget(equity_curve_canvas)
+        except Exception as e:
+            print(f"Error creating equity curve graph: {e}")
+            placeholder = QLabel("Equity curve graph could not be generated.")
+            equity_curve_layout.addWidget(placeholder)
+
+        try:
+            stats_box = QTextEdit(self.create_stats_text(self.results[strategy_index][file]))
+            stats_box.setReadOnly(True)
+            stats_layout.addWidget(stats_box)
+        except Exception as e:
+            print(f"Error creating results text: {e}")
+            placeholder = QLabel("Results text could not be generated.")
+            stats_layout.addWidget(placeholder)
+
+        dataframe_layout.addWidget(graph_tabs)
+        dataframe_tab.setLayout(dataframe_layout)
+        return dataframe_tab
+
     def create_candlestick_graph(self, results):
         strategy_instance = results._strategy
-        
-        # Create candlestick figure
+
+        # Create the candlestick figure
         fig = strategy_instance.plot_candlestick()
 
         # Create the canvas and toolbar
         canvas = FigureCanvas(fig)
         toolbar = NavigationToolbar2QT(canvas, self)
-        
-        # Create a containter widget
+
+        # Create a container widget for the graph and toolbar
         container = QWidget()
         layout = QVBoxLayout(container)
         layout.addWidget(toolbar)
