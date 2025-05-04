@@ -48,6 +48,6 @@ ToDo:
 1. Add compatibility with multiple file types (e.g. csv)
 2. ~~ Add cookie to store selected data files and strategies for launch ~~
 3. Adjust UI
-4. Add hidden list for strategies
+4. ~~ Add hidden list for strategies ~~
 5. Fix graphs having dumb numbers
-6. Add option to zoom in for graphs (toolbar)
+6. ~~ Add option to zoom in for graphs (toolbar) ~~
