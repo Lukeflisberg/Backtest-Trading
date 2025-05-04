@@ -5,7 +5,7 @@ import importlib.util
 import time
 import inspect
 import pandas as pd
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT
 from backtesting import Strategy, Backtest
 from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QTabWidget,
@@ -245,10 +245,11 @@ class DebugProcessingWindow(QWidget):
         self.next_button.clicked.connect(self.go_to_next)
         self.next_button.hide()
 
-        main_layout.addWidget(self.log_box)
+        button_layout.addStretch()
         button_layout.addWidget(self.prev_button)
         button_layout.addWidget(self.next_button)
 
+        main_layout.addWidget(self.log_box)
         main_layout.addLayout(button_layout)
         self.setLayout(main_layout)
 
@@ -468,18 +469,39 @@ class ResultsWindow(QWidget):
     def create_candlestick_graph(self, results):
         strategy_instance = results._strategy
         
+        # Create candlestick figure
         fig = strategy_instance.plot_candlestick()
 
+        # Create the canvas and toolbar
         canvas = FigureCanvas(fig)
-        return canvas
+        toolbar = NavigationToolbar2QT(canvas, self)
+        
+        # Create a containter widget
+        container = QWidget()
+        layout = QVBoxLayout(container)
+        layout.addWidget(toolbar)
+        layout.addWidget(canvas)
+
+        return container
 
     def create_equity_curve_graph(self, results):
         equity_curve = results['_equity_curve']['Equity']
         strategy_instance = results._strategy
         
+        # Create equity curve figure
         fig = strategy_instance.plot_equity_curve(equity_curve)
+        
+        # Create canvas and toolbar
         canvas = FigureCanvas(fig)
-        return canvas
+        toolbar = NavigationToolbar2QT(canvas, self)
+
+        # Create a container widget
+        container = QWidget()
+        layout = QVBoxLayout(container)
+        layout.addWidget(toolbar)
+        layout.addWidget(canvas)
+
+        return container
 
     def create_stats_text(self, results):
         return results.to_string()
