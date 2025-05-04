@@ -46,7 +46,7 @@ A program to backtest multiple dataframes with multiple strategies and recieve m
 ```plaintext
 ToDo:
 1. Add compatibility with multiple file types (e.g. csv)
-2. Add cookie to store selected data files and strategies for launch
+2. ~~ Add cookie to store selected data files and strategies for launch ~~
 3. Adjust UI
 4. Add hidden list for strategies
 5. Fix graphs having dumb numbers
