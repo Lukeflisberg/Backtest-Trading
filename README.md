@@ -47,7 +47,11 @@ A program to backtest multiple dataframes with multiple strategies and recieve m
 ToDo:
 1. Add compatibility with multiple file types (e.g. csv)
 2. ~~ Add cookie to store selected data files and strategies for launch ~~
-3. Adjust UI
+3. ~~ Adjust UI ~~
 4. ~~ Add hidden list for strategies ~~
-5. Fix graphs having dumb numbers
+5. ~~ Fix graphs having dumb numbers ~~
 6. ~~ Add option to zoom in for graphs (toolbar) ~~
+7. Add more detail to graphs. e.g.
+![image](https://github.com/user-attachments/assets/24d925bc-497f-4864-b061-475c6a2ce0a4)
+add option to toggle the text as well
+
