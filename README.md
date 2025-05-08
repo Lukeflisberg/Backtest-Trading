@@ -43,6 +43,9 @@ A program to backtest multiple dataframes with multiple strategies and recieve m
 ### 1️⃣ Results Window
 ![image](https://github.com/user-attachments/assets/80378e6f-991b-42c9-80b5-664d0f39d223)
 
+### Future UI
+![image](https://github.com/user-attachments/assets/24d925bc-497f-4864-b061-475c6a2ce0a4)
+
 ```plaintext
 ToDo:
 1. Add compatibility with multiple file types (e.g. csv)
@@ -50,8 +53,4 @@ ToDo:
 3. ~~ Adjust UI ~~
 4. ~~ Add hidden list for strategies ~~
 5. ~~ Fix graphs having dumb numbers ~~
-6. ~~ Add option to zoom in for graphs (toolbar) ~~
-7. Add more detail to graphs. e.g.
-![image](https://github.com/user-attachments/assets/24d925bc-497f-4864-b061-475c6a2ce0a4)
-add option to toggle the text as well
-
+6. ~~ Add option to zoom in for graphs (toolbar) ~~ 
