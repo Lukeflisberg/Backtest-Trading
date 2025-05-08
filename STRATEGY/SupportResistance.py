@@ -249,7 +249,7 @@ class strategy(Strategy):
         
         # Plot the candelstick
         fig, ax1 = plt.subplots(figsize=(18, 10))
-        mpf.plot(data, type='candle', ax=ax1, style='charles', show_nontrading=True)
+        mpf.plot(data, type='candle', ax=ax1, style='charles', show_nontrading=True, warn_too_much_data=999999)
 
         # Plot support points series
         if self.support_points_series:
@@ -288,8 +288,23 @@ class strategy(Strategy):
         sell_dates = [self.data.index[trade['index']] for trade in sell_trades]
         sell_prices = [self.data.Close[trade['index']]*1.02 for trade in sell_trades] # Takes commissions into account
 
+        # Plot buy trades
         buy_scatter = ax1.scatter(buy_dates, buy_prices, color='green', marker='^', label='Buy Trades', s=100)
+        for date, price in zip(buy_dates, buy_prices):
+            ax1.annotate(f"BUY\n{price:.2f}", (date, price), textcoords="offset points", xytext=(0, 10), ha='center', color='green')
+
+        # Plot sell trades
         sell_scatter = ax1.scatter(sell_dates, sell_prices, color='red', marker='v', label='Sell Trades', s=100)
+        for date, price in zip(sell_dates, sell_prices):
+            ax1.annotate(f"SELL\n{price:.2f}", (date, price), textcoords="offset points", xytext=(0, -15), ha='center', color='red')
+
+        # Draw lines connecting buy and sell trades
+        for buy, sell in zip(buy_trades, sell_trades):
+            buy_date = self.data.index[buy['index']]
+            sell_date = self.data.index[sell['index']]
+            buy_price = self.data.Close[buy['index']]
+            sell_price = self.data.Close[sell['index']]
+            ax1.plot([buy_date, sell_date], [buy_price, sell_price], color='blue', linestyle='--', linewidth=1)
 
         # Plot strong indicators
         sorted_indicators = sorted(self.strong_indicator_levels, key=lambda x: (-x['nr_times'], -self.strong_indicator_levels.index(x)))
