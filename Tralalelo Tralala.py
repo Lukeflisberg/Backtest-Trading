@@ -5,6 +5,8 @@ import importlib.util
 import time
 import inspect
 import pandas as pd
+from pandas import ExcelWriter
+from datetime import datetime
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas, NavigationToolbar2QT
 from backtesting import Strategy, Backtest
 from PyQt5.QtWidgets import (
@@ -284,7 +286,39 @@ class DebugProcessingWindow(QWidget):
         self.log(f"TOTAL elapsed time: {time.time() - self.time_start['total']:.2f}s")
         self.next_button.show()
         self.prev_button.show()
-            
+
+        self.save_results_to_excel()
+    
+    def save_results_to_excel(self):
+        excel_filename = "backtest_results.xlsx"
+        now = datetime.now().strftime("%Y-%m-%d_%H-%M")
+
+        for i, file in enumerate(self.selected_files):
+            rows = []
+            for j, strategy in enumerate(self.selected_strategies):
+                stats = self.results[j].get(file)
+                if stats is None:
+                    continue
+                row = {
+                    "strategy_name": strategy,
+                    "profit": stats.get('Equity Final [$]', None),
+                    "nr_trades": stats.get('# Trades', None),
+                    "win_rate": stats.get('Win Rate [%]', None),
+                    "sharpe_ratio": stats.get('Sharpe Ratio', None),
+                    "return_%": stats.get('Return [%]', None),
+                    "max_drawdown": stats.get('Max. Drawdown [%]', None),
+                    "start": stats.get('Start', None),
+                    "end": stats.get('End', None),
+                }
+                rows.append(row)
+            if not rows:
+                continue
+            df_results = pd.DataFrame(rows)
+            sheet_name = f"{os.path.splitext(file)[0]}_{now}"
+            sheet_name = sheet_name.replace("/", "_")[:31]
+            with ExcelWriter(excel_filename, engine='openpyxl', mode='a' if os.path.exists(excel_filename) else 'w') as writer:
+                df_results.to_excel(writer, sheet_name=sheet_name, index=False)
+
     def log(self, message):
         self.log_box.append(f"{self.task_index}. {message}")
         self.log_box.verticalScrollBar().setValue(self.log_box.verticalScrollBar().maximum())
